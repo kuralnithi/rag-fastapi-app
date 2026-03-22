@@ -9,9 +9,20 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# Initialize once
-vectorstore = create_vectorstore()
-retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+_vectorstore = None
+_retriever = None
+
+def get_vectorstore():
+    global _vectorstore
+    if _vectorstore is None:
+        _vectorstore = create_vectorstore()
+    return _vectorstore
+
+def get_retriever():
+    global _retriever
+    if _retriever is None:
+        _retriever = get_vectorstore().as_retriever(search_kwargs={"k": 5})
+    return _retriever
 
 RAG_PROMPT = ChatPromptTemplate.from_messages([
     ("system", "Answer using ONLY the context below. Cite section names. Say 'I don't know' if unsure."),
@@ -27,7 +38,8 @@ llm = ChatGroq(
 
 def rag(query: str) -> str:
     print("query---",query)
-    docs = retriever.invoke(query)
+    retriever_instance = get_retriever()
+    docs = retriever_instance.invoke(query)
     context = format_docs(docs)
 
     prompt_value = RAG_PROMPT.invoke({
@@ -40,4 +52,4 @@ def rag(query: str) -> str:
 
 def add_document(file_path: str):
     print(f"Adding new document to vectorstore: {file_path}")
-    add_file_to_vectorstore(file_path, vectorstore)
+    add_file_to_vectorstore(file_path, get_vectorstore())
