@@ -1,0 +1,51 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+*.env
+
+# FastAPI / logs
+*.log
+
+# IDE/project settings
+.vscode/
+.idea/
+
+# LangChain / AI caches
+.cache/
+langchain_cache/
+vectorstore/
+chroma_db/
+faiss_index/
+huggingface/
+datasets/
+tokenizers/
+
+# Model weights
+*.bin
+*.ckpt
+*.pt
+*.h5
+*.onnx
+
+# Generated files
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Lock files (optional)
+uv.lock
+
