@@ -4,6 +4,7 @@ from langchain_docling.loader import ExportType
 from docling_core.transforms.chunker import HierarchicalChunker
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
+from qdrant_client import QdrantClient
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.core.config import SOURCE, EMBED_MODEL_ID, QDRANT_URL, COLLECTION_NAME, QDRANT_API_KEY
@@ -19,16 +20,23 @@ def load_documents():
 
 
 def create_vectorstore():
-    docs = load_documents()
-
     embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL_ID)
+    
+    # Just initialize the connection to the existing collection
+    # rather than loading and embedding documents on every server startup!
+    client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
+    
+    # Ensure collection exists
+    if not client.collection_exists(COLLECTION_NAME):
+        client.create_collection(
+            collection_name=COLLECTION_NAME,
+            vectors_config={"size": 384, "distance": "Cosine"} # Size for all-MiniLM-L6-v2
+        )
 
-    vectorstore = QdrantVectorStore.from_documents(
-        documents=docs,
-        embedding=embeddings,
-        url=QDRANT_URL,
-        api_key=QDRANT_API_KEY,
+    vectorstore = QdrantVectorStore(
+        client=client,
         collection_name=COLLECTION_NAME,
+        embedding=embeddings,
     )
 
     return vectorstore
