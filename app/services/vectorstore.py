@@ -6,7 +6,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.core.config import SOURCE, EMBED_MODEL_ID, QDRANT_URL, COLLECTION_NAME
+from app.core.config import SOURCE, EMBED_MODEL_ID, QDRANT_URL, COLLECTION_NAME, QDRANT_API_KEY
 
 
 def load_documents():
@@ -27,6 +27,7 @@ def create_vectorstore():
         documents=docs,
         embedding=embeddings,
         url=QDRANT_URL,
+        api_key=QDRANT_API_KEY,
         collection_name=COLLECTION_NAME,
     )
 

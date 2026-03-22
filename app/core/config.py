@@ -7,7 +7,8 @@ SOURCE = "https://raw.githubusercontent.com/tnahddisttud/sample-doc/refs/heads/m
 
 EMBED_MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2"
 
-QDRANT_URL = "http://localhost:6333"
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", None)
 COLLECTION_NAME = "hr_docs"
 
 GROQ_MODEL = "openai/gpt-oss-20b"
