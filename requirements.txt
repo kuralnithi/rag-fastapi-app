@@ -3,11 +3,6 @@ uvicorn
 langchain
 langchain-community
 langchain-docling
-fastapi
-uvicorn
-langchain
-langchain-community
-langchain-docling
 langchain-huggingface
 langchain-qdrant
 langchain-groq
